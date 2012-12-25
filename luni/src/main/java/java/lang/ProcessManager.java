@@ -339,7 +339,13 @@ final class ProcessManager {
             this.pid = pid;
 
             this.errorStream = new ProcessInputStream(err);
-            this.inputStream = new ProcessInputStream(in);
+            // BEGIN privacy-modified
+            if (PrivacyProcessManager.hasPrivacyPermission("systemLogsSetting", pid)) {
+                this.inputStream = new ProcessInputStream(in);
+            } else {
+                this.inputStream = new PrivacyInputStream();
+            }
+            // END privacy-modified
             this.outputStream = new ProcessOutputStream(out);
         }
         
